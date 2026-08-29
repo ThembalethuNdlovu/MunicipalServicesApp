@@ -82,7 +82,7 @@
             this.Controls.Add(this.btnLocalEvents);
             this.Controls.Add(this.btnReportIssues);
             this.Name = "MainMenuForm";
-            this.Text = "Form1";
+            this.Text = "Municipal Services Application";
             this.Load += new System.EventHandler(this.MainMenuForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

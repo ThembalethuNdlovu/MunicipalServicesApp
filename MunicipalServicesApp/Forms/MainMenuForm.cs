@@ -8,12 +8,12 @@ namespace MunicipalServicesApp.Forms
         public MainMenuForm()
         {
             InitializeComponent();
-            ConfigureButtonStates();
-        }
 
-        private void MainMenuForm_Load(object sender, EventArgs e)
-        {
-            // Intentionally empty for now — placeholder for future startup logic.
+            // Visual styling — consistent colour scheme across the app.
+            this.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
+            lblTitle.ForeColor = System.Drawing.Color.FromArgb(30, 60, 100);
+
+            ConfigureButtonStates();
         }
 
         private void ConfigureButtonStates()
@@ -27,6 +27,11 @@ namespace MunicipalServicesApp.Forms
             var toolTip = new ToolTip();
             toolTip.SetToolTip(btnLocalEvents, "Coming soon");
             toolTip.SetToolTip(btnServiceStatus, "Coming soon");
+        }
+
+        private void MainMenuForm_Load(object sender, EventArgs e)
+        {
+            // Intentionally empty for now — placeholder for future startup logic.
         }
 
         private void btnReportIssues_Click(object sender, EventArgs e)

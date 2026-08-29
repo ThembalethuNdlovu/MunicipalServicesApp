@@ -164,7 +164,7 @@
             this.Controls.Add(this.txtLocation);
             this.Controls.Add(this.lblLocation);
             this.Name = "ReportIssueForm";
-            this.Text = "ReportIssueForm";
+            this.Text = "Report an Issue";
             this.Load += new System.EventHandler(this.ReportIssueForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

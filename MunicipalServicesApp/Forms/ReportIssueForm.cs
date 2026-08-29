@@ -8,8 +8,11 @@ namespace MunicipalServicesApp.Forms
 {
     public partial class ReportIssueForm : Form
     {
-        // Tracks how many of the "required" fields are filled, to drive the progress bar.
         private const int TotalTrackedFields = 3; // Location, Category, Description
+
+        // Parallel list holding full file paths (ListBox only shows file names for readability).
+        private readonly System.Collections.Generic.List<string> _attachedFullPaths =
+            new System.Collections.Generic.List<string>();
 
         public ReportIssueForm()
         {
@@ -24,6 +27,17 @@ namespace MunicipalServicesApp.Forms
             progressEngagement.Value = 0;
 
             lblEngagement.Text = "Let's get started — fill in the details below.";
+
+            // Visual styling — consistent colour scheme across the app.
+            this.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
+
+            btnSubmit.FlatStyle = FlatStyle.Flat;
+            btnSubmit.BackColor = System.Drawing.Color.FromArgb(30, 120, 80);
+            btnSubmit.ForeColor = System.Drawing.Color.White;
+            btnSubmit.Font = new System.Drawing.Font(btnSubmit.Font, System.Drawing.FontStyle.Bold);
+
+            btnAttach.FlatStyle = FlatStyle.Flat;
+            btnAttach.BackColor = System.Drawing.Color.FromArgb(230, 230, 230);
 
             // Hook up live progress tracking as the user types/selects.
             txtLocation.TextChanged += (s, ev) => UpdateEngagementProgress();
@@ -87,8 +101,6 @@ namespace MunicipalServicesApp.Forms
                         lstAttachments.Items.Add(Path.GetFileName(fileName));
                     }
 
-                    // Store full paths separately via Tag, keyed by list index isn't ideal —
-                    // simpler: keep a parallel list of full paths.
                     foreach (string fullPath in openFileDialog.FileNames)
                     {
                         _attachedFullPaths.Add(fullPath);
@@ -96,10 +108,6 @@ namespace MunicipalServicesApp.Forms
                 }
             }
         }
-
-        // Parallel list holding full file paths (ListBox only shows file names for readability).
-        private readonly System.Collections.Generic.List<string> _attachedFullPaths =
-            new System.Collections.Generic.List<string>();
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
@@ -116,6 +124,8 @@ namespace MunicipalServicesApp.Forms
             }
 
             IssueRepository.Instance.AddIssue(issue);
+
+            System.Diagnostics.Debug.WriteLine($"Total issues stored: {IssueRepository.Instance.Count}");
 
             MessageBox.Show(
                 "Thank you! Your issue has been reported successfully.",
