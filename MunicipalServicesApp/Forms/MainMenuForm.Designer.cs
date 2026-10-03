@@ -1,4 +1,5 @@
-﻿namespace MunicipalServicesApp.Forms
+﻿
+namespace MunicipalServicesApp.Forms
 {
     partial class MainMenuForm
     {
@@ -52,6 +53,7 @@
             this.btnLocalEvents.TabIndex = 1;
             this.btnLocalEvents.Text = "Local Events and Announcements";
             this.btnLocalEvents.UseVisualStyleBackColor = true;
+            this.btnLocalEvents.Click += new System.EventHandler(this.btnLocalEvents_Click);
             // 
             // btnServiceStatus
             // 
@@ -97,4 +99,3 @@
         private System.Windows.Forms.Label lblTitle;
     }
 }
-

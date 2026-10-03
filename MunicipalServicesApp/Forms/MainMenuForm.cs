@@ -18,14 +18,16 @@ namespace MunicipalServicesApp.Forms
 
         private void ConfigureButtonStates()
         {
-            // Only "Report Issues" is functional in Part 1.
-            // These are intentionally disabled per the brief, to be enabled in Part 2/3.
-            btnLocalEvents.Enabled = false;
+            // Report Issues (Part 1) and Local Events and Announcements (Part 2) are functional.
+            btnReportIssues.Enabled = true;
+            btnLocalEvents.Enabled = true;
+
+            // Service Request Status is intentionally disabled until Part 3 (POE).
             btnServiceStatus.Enabled = false;
 
-            // Optional: tooltip explaining why they're disabled, for user clarity.
             var toolTip = new ToolTip();
-            toolTip.SetToolTip(btnLocalEvents, "Coming soon");
+            toolTip.SetToolTip(btnReportIssues, "Report a problem or request a service");
+            toolTip.SetToolTip(btnLocalEvents, "View local events and municipal announcements");
             toolTip.SetToolTip(btnServiceStatus, "Coming soon");
         }
 
@@ -38,6 +40,14 @@ namespace MunicipalServicesApp.Forms
         {
             var reportForm = new ReportIssueForm();
             reportForm.ShowDialog();
+        }
+
+        private void btnLocalEvents_Click(object sender, EventArgs e)
+        {
+            using (var eventsForm = new LocalEventsForm())
+            {
+                eventsForm.ShowDialog(this);
+            }
         }
     }
 }
