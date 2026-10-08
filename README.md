@@ -79,13 +79,15 @@ A C# .NET Framework Windows Forms application for a South African municipality. 
 
 ## Data Structures Used (Part 2)
 
+> In .NET, `Dictionary<TKey, TValue>` is the generic hash table implementation, so the dictionary rows below cover the hash table requirement.
+
 | Data structure | Where it is used | Why it was chosen |
 |---|---|---|
 | `Dictionary<Guid, LocalEvent>` (hash table) | `EventRepository` | O(1) lookup of an event by its unique ID. |
 | `SortedDictionary<DateTime, List<LocalEvent>>` | `EventRepository` | Keeps events grouped by day and always in date order, so listings need no extra sorting. Date-range searches stop as soon as they pass the end date. |
-| `Dictionary<string, List<LocalEvent>>` | `EventRepository` | Groups events by category (case-insensitive) for quick category retrieval. |
+| `Dictionary<string, List<LocalEvent>>` | `EventRepository` | Groups events by category (case-insensitive) and is exposed through `GetByCategory()`. The search page currently filters by category inside `Search()`, so this lookup is available for later parts. |
 | `HashSet<string>` (set) | `EventRepository` | Stores the unique categories, which feed the category dropdown without duplicates. |
-| `SortedSet<DateTime>` (set) | `EventRepository` | Stores the unique event dates in order. |
+| `SortedSet<DateTime>` (set) | `EventRepository` | Stores the unique event dates in order, exposed through `GetEventDates()` (available for later parts). |
 | `Queue<LocalEvent>` | `EventRepository` | Announcements are dequeued from the front and re-enqueued at the back, so the announcement bar cycles fairly (first in, first out). |
 | `MinPriorityQueue<T>` (custom binary min-heap) | `EventRepository`, `RecommendationService` | .NET Framework has no built-in priority queue, so one was written. It picks the top featured events (priority number, then date) and the top-scoring recommendations. Enqueue and dequeue are O(log n). |
 | `Stack<SearchRecord>` | `SearchHistoryService` | Records searches with the most recent on top (last in, first out), used for the "Recent searches" line. |
