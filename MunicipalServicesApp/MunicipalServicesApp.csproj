@@ -51,6 +51,7 @@
     <Compile Include="DataStructures\BinaryTree.cs" />
     <Compile Include="DataStructures\BinaryTreeNode.cs" />
     <Compile Include="DataStructures\GeneralTree.cs" />
+    <Compile Include="DataStructures\RedBlackTree.cs" />
     <Compile Include="DataStructures\StructureSelfTests.cs" />
     <Compile Include="Forms\LocalEventsForm.cs">
       <SubType>Form</SubType>
