@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -42,6 +43,7 @@ namespace MunicipalServicesApp.DataStructures
             TestBinarySearchTree(report);
             TestDegenerateBst(report);
             TestGeneralTree(report);
+            TestAvlTree(report);
 
             var summary = new StringBuilder();
             summary.AppendLine(string.Format("Result: {0} passed, {1} failed", report.Passed, report.Failed));
@@ -160,7 +162,85 @@ namespace MunicipalServicesApp.DataStructures
             r.Check("Find a missing value returns null", tree.Find(v => v == "Parks") == null);
         }
 
+        private static void TestAvlTree(Report r)
+        {
+            r.Heading("AVL tree: rotations");
+
+            var empty = new AvlTree<int, string>();
+            r.Check("Empty AVL tree is valid with height 0",
+                empty.Validate() && empty.Height == 0 && empty.Count == 0);
+
+            CheckRotation(r, "Left-left case (insert 30,20,10): one right rotation",
+                new[] { 30, 20, 10 }, 1);
+            CheckRotation(r, "Right-right case (insert 10,20,30): one left rotation",
+                new[] { 10, 20, 30 }, 1);
+            CheckRotation(r, "Left-right case (insert 30,10,20): double rotation",
+                new[] { 30, 10, 20 }, 2);
+            CheckRotation(r, "Right-left case (insert 10,30,20): double rotation",
+                new[] { 10, 30, 20 }, 2);
+
+            var seven = new AvlTree<int, string>();
+            for (int i = 1; i <= 7; i++)
+                seven.Insert(i, "v" + i);
+
+            r.Check("Inserting 1..7 in order gives a perfect tree of height 3",
+                Keys(seven.PreOrder()) == "4,2,1,3,6,5,7" && seven.Height == 3 && seven.Validate());
+            r.Note("Diagram after inserting 1..7 in order (key and node height):");
+            foreach (string line in seven.ToDiagramLines())
+                r.Note(line);
+
+            r.Heading("AVL tree: balance guarantee");
+
+            // The same sorted input that turned the plain BST into a 200-level list
+            var sequential = new AvlTree<int, string>();
+            for (int i = 1; i <= 200; i++)
+                sequential.Insert(i, "v" + i);
+
+            string value;
+            sequential.TryGetValue(200, out value);
+            int sequentialHeight = sequential.Height;
+            int sequentialComparisons = sequential.LastOperationComparisons;
+
+            r.Check("Sorted insertion of 200 keys keeps the tree valid and balanced", sequential.Validate());
+            r.Check("Height is at most 11 (AVL bound: 1.44 x log2(n + 2))", sequentialHeight <= 11);
+            r.Check("Finding key 200 needs no more comparisons than the height",
+                sequentialComparisons <= sequentialHeight);
+            r.Note(string.Format("Sorted order, AVL: height {0}, {1} comparisons to find key 200, {2} rotations",
+                sequentialHeight, sequentialComparisons, sequential.RotationCount));
+            r.Note("(the plain BST needed height 200 and 200 comparisons for the same keys)");
+
+            // 37 and 101 share no factors, so i * 37 % 101 visits every value 1..100 exactly once
+            var scrambled = new AvlTree<int, string>();
+            for (int i = 1; i <= 100; i++)
+            {
+                int key = (i * 37) % 101;
+                scrambled.Insert(key, "v" + key);
+            }
+
+            r.Check("100 keys in scrambled order: tree is valid and has 100 entries",
+                scrambled.Validate() && scrambled.Count == 100);
+            r.Check("In-order traversal returns 1..100",
+                Keys(scrambled.InOrder()) == string.Join(",", Enumerable.Range(1, 100)));
+            r.Check("Duplicate key is rejected and the tree stays valid",
+                !scrambled.Insert(50, "other") && scrambled.Count == 100 && scrambled.Validate());
+            r.Check("Range 10..15 gives 10,11,12,13,14,15",
+                Keys(scrambled.GetRange(10, 15)) == "10,11,12,13,14,15");
+        }
+
         // =====================================================================
+        private static void CheckRotation(Report r, string name, int[] insertOrder, int expectedRotations)
+        {
+            var tree = new AvlTree<int, string>();
+            foreach (int key in insertOrder)
+                tree.Insert(key, "v" + key);
+
+            // All four cases end with 20 at the root, 10 on its left and 30 on its right
+            r.Check(name,
+                Keys(tree.PreOrder()) == "20,10,30" &&
+                tree.RotationCount == expectedRotations &&
+                tree.Validate());
+        }
+
         private static string Keys(IEnumerable<KeyValuePair<int, string>> entries)
         {
             return string.Join(",", entries.Select(e => e.Key));
