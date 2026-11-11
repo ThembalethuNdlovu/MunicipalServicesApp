@@ -128,7 +128,9 @@ namespace MunicipalServicesApp.Forms
             System.Diagnostics.Debug.WriteLine($"Total issues stored: {IssueRepository.Instance.Count}");
 
             MessageBox.Show(
-                "Thank you! Your issue has been reported successfully.",
+                "Thank you! Your issue has been reported successfully." + Environment.NewLine + Environment.NewLine +
+                "Your tracking number is: " + issue.TrackingNumber + Environment.NewLine +
+                "Keep it safe. You can use it under \"Service Request Status\" to follow your request.",
                 "Report Submitted",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
