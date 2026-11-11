@@ -8,6 +8,7 @@ namespace MunicipalServicesApp.Forms
         public MainMenuForm()
         {
             InitializeComponent();
+            
 
             // Visual styling — consistent colour scheme across the app.
             this.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
