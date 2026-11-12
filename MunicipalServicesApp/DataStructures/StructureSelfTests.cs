@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MunicipalServicesApp.Services;
 
 namespace MunicipalServicesApp.DataStructures
 {
@@ -45,6 +46,7 @@ namespace MunicipalServicesApp.DataStructures
             TestGeneralTree(report);
             TestAvlTree(report);
             TestRedBlackTree(report);
+            TestBinaryHeap(report);
 
             var summary = new StringBuilder();
             summary.AppendLine(string.Format("Result: {0} passed, {1} failed", report.Passed, report.Failed));
@@ -336,6 +338,109 @@ namespace MunicipalServicesApp.DataStructures
                 dates.Count == 30 && datesInRange == "6,7,8,9,10" && dates.Validate());
         }
 
+        private static void TestBinaryHeap(Report r)
+        {
+            r.Heading("Binary heap (priority queue): basics");
+
+            var empty = new BinaryHeap<int>(Comparer<int>.Default);
+            int ignored;
+            r.Check("Empty heap has count 0, height 0 and is valid",
+                empty.Count == 0 && empty.Height == 0 && empty.IsEmpty && empty.Validate());
+            r.Check("Empty heap: Peek and Dequeue throw, TryPeek and TryDequeue return false",
+                ThrowsInvalidOperation(() => empty.Peek()) &&
+                ThrowsInvalidOperation(() => empty.Dequeue()) &&
+                !empty.TryPeek(out ignored) && !empty.TryDequeue(out ignored));
+
+            bool nullRejected = false;
+            try { new BinaryHeap<int>((Comparison<int>)null); }
+            catch (ArgumentNullException) { nullRejected = true; }
+            r.Check("A null comparison is rejected with ArgumentNullException", nullRejected);
+
+            // Hand-traced: each new value sifts up past larger parents
+            var heap = new BinaryHeap<int>((a, b) => a.CompareTo(b));
+            foreach (int value in new[] { 50, 30, 70, 20, 40, 60, 80, 10 })
+                heap.Enqueue(value);
+
+            r.Check("Eight values: smallest (10) is on top and the array layout is as expected",
+                heap.Count == 8 && heap.Peek() == 10 && heap.Height == 4 && heap.Validate() &&
+                string.Join(",", heap.ToList()) == "10,20,60,30,40,70,80,50");
+
+            List<string> levels = heap.ToLevelLines();
+            r.Check("Level view has one line per level",
+                levels.Count == heap.Height && levels[0] == "Level 1: 10" && levels[1] == "Level 2: 20, 60");
+            r.Note("Heap by level (smallest on top, siblings are not sorted):");
+            foreach (string line in levels)
+                r.Note(line);
+
+            int first = heap.Dequeue();
+            r.Check("Dequeue returns 10, then 20 is on top and the heap is still valid",
+                first == 10 && heap.Peek() == 20 && heap.Count == 7 && heap.Validate());
+            r.Check("Draining the rest gives 20,30,40,50,60,70,80 (sorted)",
+                Drain(heap) == "20,30,40,50,60,70,80" && heap.IsEmpty);
+
+            var duplicates = new BinaryHeap<int>(Comparer<int>.Default);
+            foreach (int value in new[] { 5, 5, 3, 3 })
+                duplicates.Enqueue(value);
+            r.Check("Equal items are all kept (5,5,3,3 drains as 3,3,5,5)",
+                Drain(duplicates) == "3,3,5,5");
+
+            var maxFirst = new BinaryHeap<int>((a, b) => b.CompareTo(a));
+            foreach (int value in new[] { 3, 1, 5, 2, 4 })
+                maxFirst.Enqueue(value);
+            r.Check("A reversed comparison gives a max-first queue (5,4,3,2,1)",
+                maxFirst.Validate() && Drain(maxFirst) == "5,4,3,2,1");
+
+            var wrapper = new MinPriorityQueue<string>((a, b) => a.Length.CompareTo(b.Length));
+            foreach (string word in new[] { "pear", "apple", "fig", "banana" })
+                wrapper.Enqueue(word);
+            r.Check("Part 2 MinPriorityQueue still works on top of the heap (shortest word first)",
+                wrapper.Count == 4 && wrapper.Peek() == "fig" &&
+                wrapper.Dequeue() == "fig" && wrapper.Dequeue() == "pear" &&
+                wrapper.Dequeue() == "apple" && wrapper.Dequeue() == "banana");
+
+            r.Heading("Binary heap: BuildHeap and heap sort");
+
+            // 7 and 20 share no factors, so i * 7 % 20 gives every value 0..19 exactly once
+            var scrambled = new List<int>();
+            for (int i = 1; i <= 20; i++)
+                scrambled.Add((i * 7) % 20);
+
+            var built = new BinaryHeap<int>(Comparer<int>.Default);
+            built.BuildHeap(scrambled);
+            int buildComparisons = built.LastOperationComparisons;
+
+            r.Check("BuildHeap on 20 scrambled values: valid, count 20, smallest (0) on top",
+                built.Count == 20 && built.Validate() && built.Peek() == 0);
+            r.Check("BuildHeap needs at most 2n comparisons (O(n))", buildComparisons <= 2 * 20);
+
+            List<int> sorted = built.GetSortedCopy();
+            r.Check("GetSortedCopy (heap sort) returns 0..19 and leaves the heap unchanged",
+                string.Join(",", sorted) == string.Join(",", Enumerable.Range(0, 20)) &&
+                built.Count == 20 && built.Peek() == 0 && built.Validate());
+            r.Note(string.Format("BuildHeap on 20 values: {0} comparisons (limit 40)", buildComparisons));
+
+            r.Heading("Binary heap: efficiency");
+
+            // Worst case for a min-heap: every new value is the smallest so far and sifts all the way up
+            var big = new BinaryHeap<int>(Comparer<int>.Default);
+            for (int i = 1000; i >= 1; i--)
+                big.Enqueue(i);
+
+            int insertComparisons = big.LastOperationComparisons;
+            r.Check("1000 values inserted in the worst order: valid, 1 on top, height 10",
+                big.Count == 1000 && big.Validate() && big.Peek() == 1 && big.Height == 10);
+            r.Check("The last (worst-case) insert needs at most height - 1 comparisons",
+                insertComparisons <= big.Height - 1);
+
+            int removed = big.Dequeue();
+            int removeComparisons = big.LastOperationComparisons;
+            r.Check("Dequeue needs at most 2 x (height - 1) comparisons and keeps the heap valid",
+                removed == 1 && big.Peek() == 2 && big.Validate() &&
+                removeComparisons <= 2 * (big.Height - 1));
+            r.Note(string.Format("1000 values: height {0}, worst insert {1} comparisons, dequeue {2} comparisons, {3} swaps so far",
+                big.Height, insertComparisons, removeComparisons, big.SwapCount));
+        }
+
         // =====================================================================
         private static void CheckRotation(Report r, string name, int[] insertOrder, int expectedRotations)
         {
@@ -365,6 +470,27 @@ namespace MunicipalServicesApp.DataStructures
                 tree.GetColour(10) == "Red" &&
                 tree.GetColour(30) == "Red" &&
                 tree.Validate());
+        }
+
+        private static string Drain(BinaryHeap<int> heap)
+        {
+            var items = new List<int>();
+            while (heap.Count > 0)
+                items.Add(heap.Dequeue());
+            return string.Join(",", items);
+        }
+
+        private static bool ThrowsInvalidOperation(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (InvalidOperationException)
+            {
+                return true;
+            }
+            return false;
         }
 
         private static string Keys(IEnumerable<KeyValuePair<int, string>> entries)

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\AvlTree.cs" />
+    <Compile Include="DataStructures\BinaryHeap.cs" />
     <Compile Include="DataStructures\BinarySearchTree.cs" />
     <Compile Include="DataStructures\BinaryTree.cs" />
     <Compile Include="DataStructures\BinaryTreeNode.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Services\DemoDataSeeder.cs" />
     <Compile Include="Services\EventRepository.cs" />
     <Compile Include="Services\IssueRepository.cs" />
+    <Compile Include="Services\IssueUrgencyComparer.cs" />
     <Compile Include="Services\MinPriorityQueue.cs" />
     <Compile Include="Services\RecommendationService.cs" />
     <Compile Include="Services\SearchHistoryService.cs" />
