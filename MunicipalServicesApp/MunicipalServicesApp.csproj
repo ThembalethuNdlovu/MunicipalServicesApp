@@ -51,9 +51,12 @@
     <Compile Include="DataStructures\BinarySearchTree.cs" />
     <Compile Include="DataStructures\BinaryTree.cs" />
     <Compile Include="DataStructures\BinaryTreeNode.cs" />
+    <Compile Include="DataStructures\DisjointSet.cs" />
     <Compile Include="DataStructures\GeneralTree.cs" />
+    <Compile Include="DataStructures\Graph.cs" />
     <Compile Include="DataStructures\RedBlackTree.cs" />
     <Compile Include="DataStructures\StructureSelfTests.cs" />
+    <Compile Include="DataStructures\StructureSelfTests.Graphs.cs" />
     <Compile Include="Forms\LocalEventsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +88,7 @@
     <Compile Include="Services\MinPriorityQueue.cs" />
     <Compile Include="Services\RecommendationService.cs" />
     <Compile Include="Services\SearchHistoryService.cs" />
+    <Compile Include="Services\ServiceAreaCatalog.cs" />
     <EmbeddedResource Include="Forms\MainMenuForm.resx">
       <DependentUpon>MainMenuForm.cs</DependentUpon>
     </EmbeddedResource>

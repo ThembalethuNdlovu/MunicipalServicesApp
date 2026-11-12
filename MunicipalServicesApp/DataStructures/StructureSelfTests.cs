@@ -10,7 +10,7 @@ namespace MunicipalServicesApp.DataStructures
     /// Built-in checks for the data structures. RunAll() returns a readable report
     /// with PASS / FAIL for every check. Later steps add their own checks here.
     /// </summary>
-    public static class StructureSelfTests
+    public static partial class StructureSelfTests
     {
         private class Report
         {
@@ -47,6 +47,7 @@ namespace MunicipalServicesApp.DataStructures
             TestAvlTree(report);
             TestRedBlackTree(report);
             TestBinaryHeap(report);
+            TestGraph(report);
 
             var summary = new StringBuilder();
             summary.AppendLine(string.Format("Result: {0} passed, {1} failed", report.Passed, report.Failed));
