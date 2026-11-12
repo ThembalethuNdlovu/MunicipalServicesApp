@@ -8,7 +8,7 @@ namespace MunicipalServicesApp.Forms
         public MainMenuForm()
         {
             InitializeComponent();
-            MessageBox.Show(MunicipalServicesApp.DataStructures.StructureSelfTests.RunAll(), "Structure self-tests");
+           
 
             // Visual styling — consistent colour scheme across the app.
             this.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
