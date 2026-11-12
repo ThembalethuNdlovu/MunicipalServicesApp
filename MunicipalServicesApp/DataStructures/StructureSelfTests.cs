@@ -48,6 +48,7 @@ namespace MunicipalServicesApp.DataStructures
             TestRedBlackTree(report);
             TestBinaryHeap(report);
             TestGraph(report);
+            TestServiceRequestService(report);
 
             var summary = new StringBuilder();
             summary.AppendLine(string.Format("Result: {0} passed, {1} failed", report.Passed, report.Failed));
