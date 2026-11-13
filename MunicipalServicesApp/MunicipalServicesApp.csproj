@@ -82,6 +82,7 @@
     <Compile Include="Models\SearchRecord.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Forms\ServiceRequestStatusForm.cs" />
     <Compile Include="Services\DemoDataSeeder.cs" />
     <Compile Include="Services\EventRepository.cs" />
     <Compile Include="Services\IssueRepository.cs" />

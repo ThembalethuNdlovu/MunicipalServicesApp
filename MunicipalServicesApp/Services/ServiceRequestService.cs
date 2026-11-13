@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MunicipalServicesApp.DataStructures;
 using MunicipalServicesApp.Models;
+using System.Globalization;
 
 namespace MunicipalServicesApp.Services
 {
@@ -27,6 +28,12 @@ namespace MunicipalServicesApp.Services
         {
             int byDate = Date.CompareTo(other.Date);
             return byDate != 0 ? byDate : Sequence.CompareTo(other.Sequence);
+        }
+
+        public override string ToString()
+        {
+            return Date.ToString("MM-dd HH:mm", CultureInfo.InvariantCulture) + " #" +
+                   Sequence.ToString(CultureInfo.InvariantCulture);
         }
     }
 
