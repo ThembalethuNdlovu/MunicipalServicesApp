@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MunicipalServicesApp.Forms;
+using MunicipalServicesApp.Services;
+using System;
 using System.Windows.Forms;
-using MunicipalServicesApp.Forms;
-
-
 
 namespace MunicipalServicesApp
 {
@@ -19,6 +15,11 @@ namespace MunicipalServicesApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Seed the demo service requests once, before any form is shown,
+            // so Service Request Status has data to display.
+            DemoDataSeeder.Seed();
+
             Application.Run(new MainMenuForm());
         }
     }

@@ -63,6 +63,8 @@ namespace MunicipalServicesApp.Forms
             this.btnServiceStatus.TabIndex = 2;
             this.btnServiceStatus.Text = "Service Request Status";
             this.btnServiceStatus.UseVisualStyleBackColor = true;
+            this.btnServiceStatus.UseVisualStyleBackColor = true;
+            this.btnServiceStatus.Click += new System.EventHandler(this.btnServiceStatus_Click);
             // 
             // lblTitle
             // 

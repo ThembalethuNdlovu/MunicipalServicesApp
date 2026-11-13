@@ -8,9 +8,8 @@ namespace MunicipalServicesApp.Forms
         public MainMenuForm()
         {
             InitializeComponent();
-           
 
-            // Visual styling — consistent colour scheme across the app.
+            // Visual styling - consistent colour scheme across the app.
             this.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
             lblTitle.ForeColor = System.Drawing.Color.FromArgb(30, 60, 100);
 
@@ -19,22 +18,20 @@ namespace MunicipalServicesApp.Forms
 
         private void ConfigureButtonStates()
         {
-            // Report Issues (Part 1) and Local Events and Announcements (Part 2) are functional.
+            // All three features are now functional.
             btnReportIssues.Enabled = true;
             btnLocalEvents.Enabled = true;
-
-            // Service Request Status is intentionally disabled until Part 3 (POE).
-            btnServiceStatus.Enabled = false;
+            btnServiceStatus.Enabled = true;
 
             var toolTip = new ToolTip();
             toolTip.SetToolTip(btnReportIssues, "Report a problem or request a service");
             toolTip.SetToolTip(btnLocalEvents, "View local events and municipal announcements");
-            toolTip.SetToolTip(btnServiceStatus, "Coming soon");
+            toolTip.SetToolTip(btnServiceStatus, "Track the progress of submitted service requests");
         }
 
         private void MainMenuForm_Load(object sender, EventArgs e)
         {
-            // Intentionally empty for now — placeholder for future startup logic.
+            // Intentionally empty - placeholder for future startup logic.
         }
 
         private void btnReportIssues_Click(object sender, EventArgs e)
@@ -48,6 +45,14 @@ namespace MunicipalServicesApp.Forms
             using (var eventsForm = new LocalEventsForm())
             {
                 eventsForm.ShowDialog(this);
+            }
+        }
+
+        private void btnServiceStatus_Click(object sender, EventArgs e)
+        {
+            using (var statusForm = new ServiceRequestStatusForm())
+            {
+                statusForm.ShowDialog(this);
             }
         }
     }
