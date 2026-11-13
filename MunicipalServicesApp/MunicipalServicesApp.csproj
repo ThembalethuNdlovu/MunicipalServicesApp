@@ -76,6 +76,7 @@
     <Compile Include="Forms\ReportIssueForm.Designer.cs">
       <DependentUpon>ReportIssueForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ServiceRequestStatusForm.Graph.cs" />
     <Compile Include="Models\EventRecommendation.cs" />
     <Compile Include="Models\Issue.cs" />
     <Compile Include="Models\LocalEvent.cs" />
